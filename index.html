@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🐾 Animal Rush RP | گردونه شانس و کلیک سکه</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Tahoma,sans-serif;-webkit-tap-highlight-color:transparent}
+body{
+background:radial-gradient(circle at 50% 0%,#1a1a2e 0%,#0f0f1a 60%,#05050a 100%);
+color:#fff;min-height:100vh;padding:15px;padding-top:75px;
+display:flex;flex-direction:column;align-items:center;overflow-x:hidden;user-select:none;
+}
+body::before{
+content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+background:radial-gradient(circle at 20% 30%,rgba(233,69,96,0.15),transparent 50%),
+radial-gradient(circle at 80% 70%,rgba(78,204,163,0.15),transparent 50%);
+pointer-events:none;z-index:0;
+}
+.coin-header{
+position:fixed;top:12px;right:12px;
+background:linear-gradient(135deg,#f4a261,#e94560);
+padding:10px 20px;border-radius:30px;font-weight:bold;font-size:15px;
+box-shadow:0 5px 25px rgba(244,162,97,0.6),0 0 15px rgba(233,69,96,0.4);
+z-index:100;display:flex;align-items:center;gap:8px;
+}
+h1{
+font-size:23px;margin-bottom:8px;text-align:center;font-weight:900;
+background:linear-gradient(90deg,#e94560,#f4a261,#4ecca3,#e94560);
+background-size:300% 100%;
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+animation:gradientMove 3s linear infinite;position:relative;z-index:1;
+}
+@keyframes gradientMove{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+.subtitle{color:#888;font-size:12px;margin-bottom:20px;text-align:center;position:relative;z-index:1}
+.tabs{
+display:flex;gap:8px;margin-bottom:20px;
+background:rgba(255,255,255,0.05);padding:5px;border-radius:30px;
+border:1px solid rgba(255,255,255,0.1);position:relative;z-index:1;
+}
+.tab-btn{
+background:transparent;border:none;color:#888;padding:10px 22px;border-radius:25px;
+font-size:13px;font-weight:bold;cursor:pointer;transition:all 0.3s;
+}
+.tab-btn.active{
+background:linear-gradient(135deg,#e94560,#f4a261);color:#fff;
+box-shadow:0 5px 15px rgba(233,69,96,0.5);
+}
+.tab-content{display:none;flex-direction:column;align-items:center;width:100%;position:relative;z-index:1}
+.tab-content.active{display:flex;animation:fadeIn 0.4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.wheel-container{position:relative;width:300px;height:300px;margin:10px auto}
+.pointer{
+position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;
+border-top:38px solid #f4a261;z-index:10;
+filter:drop-shadow(0 0 10px #f4a261);
+animation:pointerPulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes pointerPulse{
+from{filter:drop-shadow(0 0 6px #f4a261)}
+to{filter:drop-shadow(0 0 18px #f4a261)}
+}
+#wheel{
+width:100%;height:100%;border-radius:50%;
+transition:transform 4s cubic-bezier(0.17,0.67,0.12,0.99);
+box-shadow:0 0 40px rgba(233,69,96,0.6),inset 0 0 30px rgba(0,0,0,0.6);
+border:6px solid #f4a261;
+}
+.spin-btn{
+background:linear-gradient(135deg,#e94560,#f4a261);
+color:#fff;border:none;padding:16px 55px;border-radius:50px;
+font-size:17px;font-weight:bold;cursor:pointer;margin-top:15px;
+transition:all 0.3s;box-shadow:0 8px 25px rgba(233,69,96,0.5);
+}
+.spin-btn:active:not(:disabled){transform:scale(0.98)}
+.spin-btn:disabled{opacity:0.5;cursor:not-allowed;filter:grayscale(0.5)}
+.timer-box{
+margin-top:15px;padding:12px 25px;
+background:linear-gradient(135deg,rgba(233,69,96,0.15),rgba(244,162,97,0.15));
+border:1px solid rgba(233,69,96,0.4);border-radius:15px;
+font-size:13px;color:#f4a261;font-weight:bold;text-align:center;
+min-width:280px;
+}
+.click-area{display:flex;flex-direction:column;align-items:center;margin-top:10px}
+.click-coin{
+width:190px;height:190px;border-radius:50%;
+background:radial-gradient(circle at 30% 30%,#f4d03f,#f39c12 50%,#d68910 100%);
+border:10px solid #b9770e;
+display:flex;align-items:center;justify-content:center;font-size:70px;
+cursor:pointer;user-select:none;
+box-shadow:0 15px 40px rgba(243,156,18,0.7),inset 0 -8px 20px rgba(0,0,0,0.3),inset 0 8px 20px rgba(255,255,255,0.2);
+transition:all 0.1s;position:relative;overflow:hidden;
+animation:coinFloat 2s ease-in-out infinite;
+}
+@keyframes coinFloat{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
+}
+.click-coin:active{transform:scale(0.92)}
+.click-coin::before{
+content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.4) 50%,transparent 60%);
+animation:coinShine 3s infinite;
+}
+@keyframes coinShine{
+0%{transform:translateX(-100%) translateY(-100%)}
+100%{transform:translateX(100%) translateY(100%)}
+}
+.click-info{
+margin-top:20px;padding:18px;background:rgba(255,255,255,0.05);
+border-radius:18px;border:1px solid rgba(255,255,255,0.1);
+text-align:center;width:100%;max-width:350px;
+}
+.click-info p{font-size:13px;line-height:2;color:#bbb}
+.highlight{color:#4ecca3;font-weight:bold}
+.cooldown-bar{
+width:100%;height:8px;background:rgba(255,255,255,0.1);
+border-radius:10px;margin-top:12px;overflow:hidden;
+}
+.cooldown-fill{
+height:100%;background:linear-gradient(90deg,#4ecca3,#44a08d);
+width:0%;transition:width 0.1s linear;border-radius:10px;
+}
+.result-box{
+margin-top:20px;padding:20px;
+background:linear-gradient(135deg,rgba(78,204,163,0.1),rgba(244,162,97,0.1));
+border-radius:20px;border:2px solid rgba(244,162,97,0.4);
+text-align:center;width:100%;max-width:400px;display:none;
+animation:resultPop 0.5s ease;
+}
+@keyframes resultPop{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.result-box h2{color:#4ecca3;margin-bottom:10px;font-size:20px}
+.prize-display{
+font-size:32px;font-weight:900;color:#f4a261;margin:12px 0;
+text-shadow:0 0 25px rgba(244,162,97,0.8);
+}
+.result-box p{font-size:13px;line-height:1.8;margin-bottom:10px;color:#bbb}
+.contact-btn{
+display:block;background:linear-gradient(135deg,#4ecca3,#44a08d);
+color:#fff;text-decoration:none;padding:14px;border-radius:12px;
+font-weight:bold;margin-top:12px;font-size:14px;transition:all 0.3s;
+}
+.contact-btn:active{transform:scale(0.98)}
+.floating-text{
+position:fixed;color:#4ecca3;font-weight:900;font-size:22px;
+pointer-events:none;animation:floatUp 1.2s ease-out forwards;z-index:1000;
+text-shadow:0 0 10px rgba(78,204,163,0.8);
+}
+@keyframes floatUp{
+0%{opacity:1;transform:translateY(0) scale(1)}
+100%{opacity:0;transform:translateY(-100px) scale(1.5)}
+}
+.confetti{
+position:fixed;width:10px;height:10px;top:-10px;z-index:1000;
+animation:confettiFall 3s linear forwards;
+}
+@keyframes confettiFall{
+to{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+.notification{
+position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-100px);
+background:linear-gradient(135deg,#4ecca3,#44a08d);color:#fff;
+padding:12px 25px;border-radius:15px;font-weight:bold;font-size:14px;
+box-shadow:0 10px 30px rgba(78,204,163,0.5);z-index:2000;
+transition:transform 0.4s ease;pointer-events:none;
+}
+.notification.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="coin-header">🪙 <span id="totalCoins">0</span></div>
+
+<h1>🐾 Animal Rush RP</h1>
+<p class="subtitle">گردونه شانس و کلیک سکه</p>
+
+<div class="tabs">
+<button class="tab-btn active" id="tabWheelBtn">🎰 گردونه</button>
+<button class="tab-btn" id="tabClickBtn">🪙 کلیک سکه</button>
+</div>
+
+<div class="tab-content active" id="wheelTab">
+<div class="wheel-container">
+<div class="pointer"></div>
+<canvas id="wheel" width="300" height="300"></canvas>
+</div>
+<button class="spin-btn" id="spinBtn">🎲 بچرخون!</button>
+<div class="timer-box" id="spinTimer">⏳ در حال بارگذاری...</div>
+<div class="result-box" id="resultBox">
+<h2>🎉 تبریک! برنده شدی!</h2>
+<div class="prize-display" id="prizeDisplay"></div>
+<p>📌 برای دریافت جایزه، اسکرین‌شات بفرست:</p>
+<a href="https://rubika.ir/haj_hoseiin1" class="contact-btn">👤 @haj_hoseiin1</a>
+</div>
+</div>
+
+<div class="tab-content" id="clickTab">
+<div class="click-area">
+<div class="click-coin" id="clickCoin">🪙</div>
+<div class="click-info">
+<p>هر کلیک = <span class="highlight">۱ سکه</span></p>
+<p>محدودیت: <span class="highlight">۱۰۰۰ کلیک</span> در ۲۴ ساعت</p>
+<p>کلیک‌های امروز: <span class="highlight" id="clicksToday">0</span> / 1000</p>
+<div class="cooldown-bar"><div class="cooldown-fill" id="cooldownFill"></div></div>
+</div>
+</div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<script>
+(function(){
+'use strict';
+
+var STORAGE_KEY = 'animalRushData_v3';
+var CLICK_COOLDOWN = 5000;
+var MAX_CLICKS_PER_DAY = 1000;
+var ONE_DAY = 24 * 60 * 60 * 1000;
+
+function loadData(){
+try{
+var raw = localStorage.getItem(STORAGE_KEY);
+if(raw){
+var d = JSON.parse(raw);
+return {
+totalCoins: Number(d.totalCoins) || 0,
+lastSpin: Number(d.lastSpin) || 0,
+clicksToday: Number(d.clicksToday) || 0,
+lastClickReset: Number(d.lastClickReset) || Date.now(),
+lastClickTime: Number(d.lastClickTime) || 0
+};
+}
+}catch(e){}
+return {totalCoins:0,lastSpin:0,clicksToday:0,lastClickReset:Date.now(),lastClickTime:0};
+}
+
+function saveData(){
+try{localStorage.setItem(STORAGE_KEY,JSON.stringify(userData));}catch(e){}
+}
+
+var userData = loadData();
+function el(id){return document.getElementById(id);}
+function updateCoinHeader(){el('totalCoins').textContent = userData.totalCoins;}
+
+function showNotification(msg,color){
+var n = el('notification');
+n.textContent = msg;
+n.style.background = color || 'linear-gradient(135deg,#4ecca3,#44a08d)';
+n.classList.add('show');
+setTimeout(function(){n.classList.remove('show');},2000);
+}
+
+function formatTime(ms){
+var h = Math.floor(ms/3600000);
+var m = Math.floor((ms%3600000)/60000);
+var s = Math.floor((ms%60000)/1000);
+if(h>0) return h+'س '+m+'د '+s+'ث';
+if(m>0) return m+'د '+s+'ث';
+return s+' ثانیه';
+}
+
+// ===== گردونه =====
+var canvas = el('wheel');
+var ctx = canvas.getContext('2d');
+
+var prizes = [
+{label:'۵۰۰',value:500,color:'#e94560'},
+{label:'۱۰۰',value:100,color:'#3498db'},
+{label:'۲۰۰',value:200,color:'#f4a261'},
+{label:'۱۱۰',value:110,color:'#4ecca3'},
+{label:'۱۹۰',value:190,color:'#9b59b6'},
+{label:'۱۲۰',value:120,color:'#e67e22'},
+{label:'۱۸۰',value:180,color:'#44a08d'},
+{label:'۱۳۰',value:130,color:'#95a5a6'},
+{label:'۱۷۰',value:170,color:'#c0392b'},
+{label:'۱۴۰',value:140,color:'#16a085'},
+{label:'۱۶۰',value:160,color:'#8e44ad'},
+{label:'۱۵۰',value:150,color:'#2980b9'}
+];
+
+var numSeg = prizes.length;
+var segAngleRad = (Math.PI*2)/numSeg;
+var segAngleDeg = 360/numSeg;
+
+function drawWheel(){
+var cx = canvas.width/2;
+var cy = canvas.height/2;
+var r = canvas.width/2 - 5;
+
+for(var i=0;i<numSeg;i++){
+var start = i*segAngleRad - Math.PI/2;
+var end = start + segAngleRad;
+
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.arc(cx,cy,r,start,end);
+ctx.closePath();
+ctx.fillStyle = prizes[i].color;
+ctx.fill();
+ctx.strokeStyle = '#0f0f1a';
+ctx.lineWidth = 2;
+ctx.stroke();
+
+ctx.save();
+ctx.translate(cx,cy);
+ctx.rotate(start + segAngleRad/2);
+ctx.textAlign = 'right';
+ctx.textBaseline = 'middle';
+ctx.fillStyle = '#fff';
+ctx.font = 'bold 12px Tahoma';
+ctx.shadowColor = 'rgba(0,0,0,0.8)';
+ctx.shadowBlur = 3;
+ctx.fillText(prizes[i].label, r-12, 0);
+ctx.restore();
+}
+
+ctx.beginPath();
+ctx.arc(cx,cy,24,0,Math.PI*2);
+ctx.fillStyle = '#0f0f1a';
+ctx.fill();
+ctx.strokeStyle = '#f4a261';
+ctx.lineWidth = 3;
+ctx.stroke();
+
+ctx.fillStyle = '#f4a261';
+ctx.font = 'bold 20px Tahoma';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('🎰',cx,cy);
+}
+
+var spinning = false;
+var currentRotation = 0;
+
+// محاسبه دقیق جایزه بر اساس زاویه
+// چون بخش‌ها از بالا (زاویه -90 درجه) شروع می‌شن
+function getPrizeFromRotation(rotationDeg){
+// نرمال‌سازی زاویه به بازه 0-360
+var norm = ((rotationDeg % 360) + 360) % 360;
+// چون بخش‌ها از بالا شروع شدن، زاویه 0 گردونه به معنی بخش اول در بالا هست
+// عقربه در بالاست (زاویه 270 در مختصات استاندارد = بالا)
+// هر بخش به اندازه segAngleDeg درجه
+var index = Math.floor(norm / segAngleDeg) % numSeg;
+return {prize: prizes[index], index: index};
+}
+
+function spinWheel(){
+if(spinning) return;
+
+var now = Date.now();
+var since = now - userData.lastSpin;
+
+if(userData.lastSpin > 0 && since < ONE_DAY){
+var rem = ONE_DAY - since;
+showNotification('⏳ ' + formatTime(rem) + ' مونده!','linear-gradient(135deg,#e94560,#c0392b)');
+return;
+}
+
+spinning = true;
+var btn = el('spinBtn');
+btn.disabled = true;
+btn.textContent = '⏳ در حال چرخش...';
+
+// انتخاب یه زاویه تصادفی که به وسط یه بخش بیفته (نه لبه‌اش)
+// اینطوری جایزه دقیقاً مشخصه
+var targetIndex = Math.floor(Math.random() * numSeg);
+
+// زاویه‌ای که باید گردونه بچرخه تا بخش targetIndex زیر عقربه (بالا) بیاد
+// بخش i از زاویه i*segAngleDeg شروع می‌شه (نسبت به بالای گردونه)
+// برای اینکه بخش i زیر عقربه بیاد، باید گردونه به اندازه (360 - i*segAngleDeg - segAngleDeg/2) بچرخه
+var targetAngle = 360 - (targetIndex * segAngleDeg) - (segAngleDeg / 2);
+
+// اضافه کردن چند دور کامل برای قشنگی
+var fullSpins = 5 + Math.floor(Math.random() * 3);
+var finalRotation = currentRotation + (fullSpins * 360) + (targetAngle - (currentRotation % 360));
+
+canvas.style.transform = 'rotate(' + finalRotation + 'deg)';
+currentRotation = finalRotation;
+
+setTimeout(function(){
+var result = getPrizeFromRotation(currentRotation);
+var prize = result.prize;
+
+userData.totalCoins += prize.value;
+userData.lastSpin = Date.now();
+saveData();
+updateCoinHeader();
+
+el('prizeDisplay').textContent = '🏆 ' + prize.label + ' سکه';
+el('resultBox').style.display = 'block';
+
+createConfetti();
+showNotification('🎉 برنده شدی: ' + prize.label + ' سکه!');
+
+spinning = false;
+btn.textContent = '🎲 بچرخون!';
+updateSpinTimer();
+},4200);
+}
+
+function updateSpinTimer(){
+var now = Date.now();
+var since = now - userData.lastSpin;
+var rem = ONE_DAY - since;
+var box = el('spinTimer');
+var btn = el('spinBtn');
+
+if(userData.lastSpin === 0 || rem <= 0){
+box.textContent = '✅ می‌تونی بچرخونی!';
+btn.disabled = false;
+}else{
+box.textContent = '⏳ چرخش بعدی: ' + formatTime(rem);
+btn.disabled = true;
+}
+}
+
+// ===== کلیک سکه =====
+function clickCoin(e){
+var now = Date.now();
+
+if(now - userData.lastClickReset >= ONE_DAY){
+userData.clicksToday = 0;
+userData.lastClickReset = now;
+saveData();
+}
+
+if(userData.clicksToday >= MAX_CLICKS_PER_DAY){
+showNotification('⛔️ محدودیت ۱۰۰۰ کلیک!','linear-gradient(135deg,#e94560,#c0392b)');
+return;
+}
+
+var since = now - userData.lastClickTime;
+if(userData.lastClickTime > 0 && since < CLICK_COOLDOWN){
+var rem = CLICK_COOLDOWN - since;
+showNotification('⏳ ' + Math.ceil(rem/1000) + ' ثانیه صبر کن','linear-gradient(135deg,#f4a261,#e67e22)');
+return;
+}
+
+userData.lastClickTime = now;
+userData.clicksToday++;
+userData.totalCoins++;
+saveData();
+
+updateCoinHeader();
+el('clicksToday').textContent = userData.clicksToday;
+
+var x = (e && e.clientX) || window.innerWidth/2;
+var y = (e && e.clientY) || window.innerHeight/2;
+showFloatingText(x,y);
+}
+
+function showFloatingText(x,y){
+var t = document.createElement('div');
+t.className = 'floating-text';
+t.textContent = '+۱';
+t.style.left = (x-15)+'px';
+t.style.top = (y-20)+'px';
+document.body.appendChild(t);
+setTimeout(function(){t.remove();},1200);
+}
+
+function createConfetti(){
+var colors = ['#e94560','#f4a261','#4ecca3','#9b59b6','#3498db','#f4d03f'];
+for(var i=0;i<60;i++){
+var c = document.createElement('div');
+c.className = 'confetti';
+c.style.left = Math.random()*100 + 'vw';
+c.style.background = colors[Math.floor(Math.random()*colors.length)];
+c.style.animationDelay = (Math.random()*0.5) + 's';
+c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+document.body.appendChild(c);
+setTimeout(function(){c.remove();},3500);
+}
+}
+
+// ===== تب‌ها =====
+function switchTab(tab){
+var wt = el('wheelTab');
+var ct = el('clickTab');
+var wb = el('tabWheelBtn');
+var cb = el('tabClickBtn');
+
+if(tab === 'wheel'){
+wt.classList.add('active');
+ct.classList.remove('active');
+wb.classList.add('active');
+cb.classList.remove('active');
+}else{
+ct.classList.add('active');
+wt.classList.remove('active');
+cb.classList.add('active');
+wb.classList.remove('active');
+}
+}
+
+// ===== اتصال رویدادها =====
+el('tabWheelBtn').addEventListener('click',function(){switchTab('wheel');});
+el('tabClickBtn').addEventListener('click',function(){switchTab('click');});
+el('spinBtn').addEventListener('click',spinWheel);
+el('clickCoin').addEventListener('click',clickCoin);
+
+// ===== شروع =====
+drawWheel();
+updateCoinHeader();
+updateSpinTimer();
+el('clicksToday').textContent = userData.clicksToday;
+
+setInterval(updateSpinTimer,1000);
+
+setInterval(function(){
+var since = Date.now() - userData.lastClickTime;
+var p = Math.min((since / CLICK_COOLDOWN) * 100, 100);
+var f = el('cooldownFill');
+if(f) f.style.width = p + '%';
+},100);
+
+})();
+</script>
+
+</body>
+  </html>
