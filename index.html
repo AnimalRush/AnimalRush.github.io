@@ -3,26 +3,374 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Animal Rush RP</title>
+<title>🐾 Animal Rush RP</title>
 <style>
-body {
-  background: #0f0f1a;
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Tahoma, sans-serif;
-  margin: 0;
-  text-align: center;
-}
-p {
-  font-size: 18px;
-  padding: 20px;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Tahoma, sans-serif; }
+body { background: #0a0a12; color: #fff; min-height: 100vh; padding-bottom: 85px; }
+.header { background: #16213e; padding: 16px; text-align: center; border-bottom: 2px solid #f4a261; position: sticky; top: 0; z-index: 100; }
+.header h1 { font-size: 21px; font-weight: 900; color: #f4a261; }
+.section { display: none; padding: 22px 15px; max-width: 500px; margin: 0 auto; }
+.section.active { display: block; }
+.section-title { font-size: 19px; font-weight: 900; margin-bottom: 18px; text-align: center; color: #f4a261; }
+.card { background: rgba(255,255,255,0.05); border: 1px solid rgba(244,162,97,0.2); border-radius: 18px; padding: 20px; margin-bottom: 15px; }
+.news-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.news-item:last-child { border-bottom: none; }
+.news-date { font-size: 11px; color: #4ecca3; margin-bottom: 6px; font-weight: bold; }
+.news-text { font-size: 14px; line-height: 1.9; color: #ddd; }
+.loading { text-align: center; color: #888; padding: 25px; font-size: 14px; }
+.btn { display: block; width: 100%; background: linear-gradient(135deg, #4ecca3, #44a08d); color: #fff; border: none; padding: 15px; border-radius: 14px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; margin-top: 12px; font-family: Tahoma; }
+.btn-support { background: linear-gradient(135deg, #e94560, #f4a261); }
+.admin-login input, .admin-news-input, .ad-input, .ad-select { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid rgba(244,162,97,0.3); background: rgba(0,0,0,0.4); color: #fff; font-size: 14px; margin-bottom: 12px; font-family: Tahoma; }
+.admin-news-input, .ad-input { resize: vertical; min-height: 70px; }
+.ad-select option { background: #1a1a2e; color: #fff; }
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
+.admin-login.hidden { display: none; }
+.admin-card-title { color: #f4a261; font-size: 15px; font-weight: bold; margin-bottom: 12px; }
+.admin-news-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.admin-news-row:last-child { border-bottom: none; }
+.admin-news-content { flex: 1; font-size: 13px; color: #ddd; padding-left: 10px; line-height: 1.7; }
+.admin-news-content .date { font-size: 11px; color: #4ecca3; margin-bottom: 4px; }
+.delete-btn { background: #e94560; color: #fff; border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 15px; flex-shrink: 0; margin-left: 5px; }
+.chat-note { font-size: 13px; color: #bbb; text-align: center; line-height: 2; margin-bottom: 15px; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #16213e; display: flex; justify-content: space-around; padding: 10px 0 12px; border-top: 2px solid #f4a261; z-index: 100; }
+.nav-btn { background: transparent; border: none; color: #666; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-family: Tahoma; cursor: pointer; padding: 6px 12px; }
+.nav-btn .icon { font-size: 22px; }
+.nav-btn.active { color: #f4a261; }
+.ad-box { background: rgba(244,162,97,0.1); border: 2px solid rgba(244,162,97,0.4); border-radius: 16px; padding: 18px; margin-bottom: 15px; position: relative; }
+.ad-box::before { content: '📢 تبلیغ'; position: absolute; top: -1px; right: 15px; background: linear-gradient(135deg, #f4a261, #e94560); color: #fff; font-size: 10px; font-weight: bold; padding: 3px 10px; border-radius: 0 0 8px 8px; }
+.ad-text { font-size: 14px; line-height: 2; color: #fff; margin-top: 8px; }
+.ad-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(244,162,97,0.3); font-size: 12px; color: #aaa; }
+.ad-contact { color: #4ecca3; font-weight: bold; }
+.ad-timer { color: #f4a261; font-weight: bold; }
+.form-label { font-size: 13px; color: #ccc; margin-bottom: 6px; display: block; font-weight: bold; }
+.form-label .req { color: #e94560; }
+.price-display { background: rgba(244,162,97,0.15); border: 2px dashed rgba(244,162,97,0.5); border-radius: 14px; padding: 15px; margin-bottom: 15px; text-align: center; }
+.price-label { font-size: 12px; color: #aaa; margin-bottom: 6px; }
+.price-value { font-size: 24px; font-weight: 900; color: #f4a261; }
+.price-hint { font-size: 11px; color: #888; margin-top: 6px; }
+.payment-box { background: rgba(78,204,163,0.08); border: 1px solid rgba(78,204,163,0.3); border-radius: 14px; padding: 15px; margin-top: 12px; display: none; }
+.payment-box.show { display: block; }
+.payment-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.payment-row:last-child { border-bottom: none; }
+.payment-row .label { color: #aaa; }
+.payment-row .value { color: #4ecca3; font-weight: bold; direction: ltr; font-size: 14px; }
 </style>
 </head>
 <body>
-<p>سایت در حال آپدیت است...</p>
+
+<div class="header">
+  <h1>🐾 Animal Rush RP</h1>
+</div>
+
+<div class="section active" id="home">
+  <h2 class="section-title">🏠 خوش آمدید</h2>
+  <div class="card">
+    <p style="line-height: 2.2; font-size: 14px; color: #ccc; text-align: center;">
+      به سایت رسمی <b style="color:#f4a261">Animal Rush RP</b> خوش آمدید!<br>
+      اخبار، تبلیغات و پشتیبانی در دسترس شماست.
+    </p>
+  </div>
+  <h3 style="color:#f4a261;font-size:15px;font-weight:bold;margin:20px 0 10px;text-align:center;">📢 تبلیغات فعال</h3>
+  <div id="homeAdsList"><div class="loading">⏳ در حال بارگذاری...</div></div>
+  <a href="https://rubika.ir/haj_hoseiin1" class="btn btn-support" target="_blank">👤 پشتیبانی: @haj_hoseiin1</a>
+</div>
+
+<div class="section" id="news">
+  <h2 class="section-title">📰 اخبار</h2>
+  <div class="card" id="newsList"><div class="loading">⏳ در حال بارگذاری...</div></div>
+</div>
+
+<div class="section" id="ads">
+  <h2 class="section-title">📢 تبلیغات</h2>
+  <div id="adsList"><div class="loading">⏳ در حال بارگذاری...</div></div>
+  <div class="card" style="margin-top: 20px;">
+    <h3 class="admin-card-title">✍️ ثبت تبلیغ جدید</h3>
+    <label class="form-label">متن تبلیغ <span class="req">*</span></label>
+    <textarea class="ad-input" id="adText" placeholder="متن تبلیغ خود را بنویسید..."></textarea>
+    <label class="form-label">آیدی تماس <span class="req">*</span></label>
+    <input type="text" class="ad-input" id="adContact" placeholder="@your_id" style="min-height:auto;">
+    <label class="form-label">مدت زمان نمایش <span class="req">*</span></label>
+    <select class="ad-select" id="adDays" onchange="updatePrice()">
+      <option value="1">۱ روز — ۳۰,۰۰۰ تومان</option>
+      <option value="2">۲ روز — ۶۰,۰۰۰ تومان</option>
+      <option value="3">۳ روز — ۹۰,۰۰۰ تومان</option>
+      <option value="4">۴ روز — ۱۲۰,۰۰۰ تومان</option>
+      <option value="5">۵ روز — ۱۵۰,۰۰۰ تومان</option>
+      <option value="6">۶ روز — ۱۸۰,۰۰۰ تومان</option>
+      <option value="7">۷ روز — ۲۱۰,۰۰۰ تومان</option>
+    </select>
+    <div class="price-display">
+      <div class="price-label">💰 مبلغ قابل پرداخت:</div>
+      <div class="price-value" id="priceValue">۳۰,۰۰۰ تومان</div>
+      <div class="price-hint">هر ۲۴ ساعت = ۳۰,۰۰۰ تومان</div>
+    </div>
+    <button class="btn" onclick="submitAd()">📢 ثبت درخواست تبلیغ</button>
+    <div class="payment-box" id="paymentBox">
+      <h3 class="admin-card-title" style="color:#4ecca3;">💳 اطلاعات پرداخت</h3>
+      <div class="payment-row"><span class="label">شماره کارت:</span><span class="value">5022 2916 1858 8055</span></div>
+      <div class="payment-row"><span class="label">به نام:</span><span class="value" style="direction:rtl;">حسین حیدری</span></div>
+      <div class="payment-row"><span class="label">مبلغ:</span><span class="value" id="paymentAmount">۳۰,۰۰۰ تومان</span></div>
+      <p style="font-size:12px;color:#aaa;line-height:2;margin-top:12px;text-align:center;">📌 عکس رسید رو بفرست به: <b style="color:#f4a261;">@haj_hoseiin1</b></p>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="chat">
+  <h2 class="section-title">💬 پشتیبانی</h2>
+  <div class="card">
+    <p class="chat-note">برای ارتباط با پشتیبانی آنلاین، به آیدی زیر پیام بدهید:</p>
+    <a href="https://rubika.ir/haj_hoseiin1" class="btn btn-support" target="_blank">👤 شروع چت: @haj_hoseiin1</a>
+  </div>
+</div>
+
+<div class="section" id="admin">
+  <h2 class="section-title">🔐 پنل مدیریت</h2>
+  <div class="card admin-login" id="adminLogin">
+    <input type="password" id="adminPass" placeholder="رمز عبور">
+    <button class="btn" onclick="adminLogin()">ورود</button>
+  </div>
+  <div class="admin-panel" id="adminPanel">
+    <div class="card">
+      <h3 class="admin-card-title">📰 افزودن خبر</h3>
+      <textarea class="admin-news-input" id="newsInput" placeholder="متن خبر را بنویسید..."></textarea>
+      <button class="btn" onclick="addNews()">📢 انتشار خبر</button>
+    </div>
+    <div class="card">
+      <h3 class="admin-card-title">🗑 مدیریت اخبار</h3>
+      <div id="adminNewsList"><div class="loading">⏳ در حال بارگذاری...</div></div>
+    </div>
+    <div class="card">
+      <h3 class="admin-card-title">📢 مدیریت تبلیغات</h3>
+      <div id="adminAdsList"><div class="loading">⏳ در حال بارگذاری...</div></div>
+    </div>
+    <div class="card">
+      <button class="btn btn-support" onclick="adminLogout()">🚪 خروج</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="showSection('home', this)"><span class="icon">🏠</span><span>خانه</span></button>
+  <button class="nav-btn" onclick="showSection('news', this)"><span class="icon">📰</span><span>اخبار</span></button>
+  <button class="nav-btn" onclick="showSection('ads', this)"><span class="icon">📢</span><span>تبلیغات</span></button>
+  <button class="nav-btn" onclick="showSection('chat', this)"><span class="icon">💬</span><span>پشتیبانی</span></button>
+  <button class="nav-btn" onclick="showSection('admin', this)"><span class="icon">🔐</span><span>مدیریت</span></button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL = 'https://fpkyujmvqbtgdmqsaonb.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwa3l1am12cWJ0Z2RtcXNhb25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMTc1MzQsImV4cCI6MjEwNTg5MzUzNH0.OKbuwo4MKceWQxqKerL-euNACzETCmPaw8Ww2JAV3co';
+var ADMIN_PASS = '1029';
+var PRICE_PER_DAY = 30000;
+
+var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function $(id){ return document.getElementById(id); }
+
+function showSection(id, btn){
+  var i;
+  var sections = document.querySelectorAll('.section');
+  for(i=0; i<sections.length; i++){ sections[i].classList.remove('active'); }
+  var t = $(id);
+  if(t) t.classList.add('active');
+  var btns = document.querySelectorAll('.nav-btn');
+  for(i=0; i<btns.length; i++){ btns[i].classList.remove('active'); }
+  if(btn) btn.classList.add('active');
+  if(id === 'news') loadNews();
+  if(id === 'ads') loadAds();
+  if(id === 'home') loadHomeAds();
+}
+
+function loadNews(){
+  var c = $('newsList');
+  c.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  db.from('news').select('*').order('id', { ascending: false })
+    .then(function(res){
+      if(res.error){ c.innerHTML = '<div class="loading" style="color:#e94560;">❌ ' + res.error.message + '</div>'; return; }
+      if(!res.data || res.data.length === 0){ c.innerHTML = '<p style="text-align:center;color:#888;">هنوز خبری ثبت نشده.</p>'; return; }
+      var html = '', i;
+      for(i=0; i<res.data.length; i++){
+        html += '<div class="news-item">';
+        if(res.data[i].date) html += '<div class="news-date">📅 ' + res.data[i].date + '</div>';
+        html += '<div class="news-text">' + res.data[i].text + '</div></div>';
+      }
+      c.innerHTML = html;
+    });
+}
+
+function buildAdHtml(ads){
+  var html = '', i;
+  for(i=0; i<ads.length; i++){
+    var exp = new Date(ads[i].expires_at);
+    var diff = exp - new Date();
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var t = d > 0 ? d + ' روز' : (h > 0 ? h + ' ساعت' : 'کمتر از ۱ ساعت');
+    html += '<div class="ad-box"><div class="ad-text">' + ads[i].text + '</div>';
+    html += '<div class="ad-footer"><span>👤 <span class="ad-contact">' + ads[i].contact + '</span></span>';
+    html += '<span class="ad-timer">⏳ ' + t + ' مونده</span></div></div>';
+  }
+  return html;
+}
+
+function loadAds(){
+  var c = $('adsList');
+  c.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  var now = new Date().toISOString();
+  db.from('ads').select('*').eq('status', 'active').gt('expires_at', now).order('id', { ascending: false })
+    .then(function(res){
+      if(res.error){ c.innerHTML = '<div style="color:#e94560;padding:10px;">❌ ' + res.error.message + '</div>'; return; }
+      if(!res.data || res.data.length === 0){ c.innerHTML = '<p style="text-align:center;color:#888;padding:15px;">هنوز تبلیغ فعالی نیست.</p>'; return; }
+      c.innerHTML = buildAdHtml(res.data);
+    });
+}
+
+function loadHomeAds(){
+  var c = $('homeAdsList');
+  c.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  var now = new Date().toISOString();
+  db.from('ads').select('*').eq('status', 'active').gt('expires_at', now).order('id', { ascending: false })
+    .then(function(res){
+      if(res.error){ c.innerHTML = '<div style="color:#e94560;padding:10px;">❌ خطا</div>'; return; }
+      if(!res.data || res.data.length === 0){ c.innerHTML = '<p style="text-align:center;color:#888;padding:15px;">هنوز تبلیغ فعالی نیست.</p>'; return; }
+      c.innerHTML = buildAdHtml(res.data);
+    });
+}
+
+function updatePrice(){
+  var days = Number($('adDays').value);
+  var price = days * PRICE_PER_DAY;
+  $('priceValue').textContent = price.toLocaleString('fa-IR') + ' تومان';
+  $('paymentAmount').textContent = price.toLocaleString('fa-IR') + ' تومان';
+}
+
+function submitAd(){
+  var text = $('adText').value.trim();
+  var contact = $('adContact').value.trim();
+  var days = Number($('adDays').value);
+  if(!text){ alert('❌ متن تبلیغ رو بنویس!'); return; }
+  if(!contact){ alert('❌ آیدی تماس رو بنویس!'); return; }
+  var exp = new Date();
+  exp.setDate(exp.getDate() + days);
+  db.from('ads').insert([{
+    text: text, contact: contact, days: days,
+    price: days * PRICE_PER_DAY, status: 'pending',
+    expires_at: exp.toISOString()
+  }]).then(function(res){
+    if(res.error){ alert('❌ خطا: ' + res.error.message); return; }
+    $('paymentBox').classList.add('show');
+    alert('✅ ثبت شد! عکس رسید رو بفرست به: @haj_hoseiin1');
+  });
+}
+
+function adminLogin(){
+  var pass = $('adminPass').value;
+  if(pass === ADMIN_PASS){
+    $('adminLogin').classList.add('hidden');
+    $('adminPanel').classList.add('active');
+    $('adminPass').value = '';
+    loadAdminNews();
+    loadAdminAds();
+  } else {
+    alert('❌ رمز اشتباهه!');
+  }
+}
+
+function adminLogout(){
+  $('adminPanel').classList.remove('active');
+  $('adminLogin').classList.remove('hidden');
+}
+
+function addNews(){
+  var text = $('newsInput').value.trim();
+  if(!text){ alert('❌ متن خبر خالیه!'); return; }
+  var today = new Date();
+  var dateStr = today.getFullYear() + '/' + String(today.getMonth()+1).padStart(2,'0') + '/' + String(today.getDate()).padStart(2,'0');
+  db.from('news').insert([{ text: text, date: dateStr }])
+    .then(function(res){
+      if(res.error){ alert('❌ خطا: ' + res.error.message); return; }
+      $('newsInput').value = '';
+      alert('✅ خبر منتشر شد!');
+      loadNews(); loadAdminNews();
+    });
+}
+
+function deleteNews(id){
+  if(!confirm('حذف این خبر؟')) return;
+  db.from('news').delete().eq('id', id).then(function(res){
+    if(res.error){ alert('❌ خطا'); return; }
+    alert('✅ حذف شد!');
+    loadNews(); loadAdminNews();
+  });
+}
+
+function approveAd(id, days){
+  var exp = new Date();
+  exp.setDate(exp.getDate() + days);
+  db.from('ads').update({ status: 'active', expires_at: exp.toISOString() }).eq('id', id)
+    .then(function(res){
+      if(res.error){ alert('❌ خطا: ' + res.error.message); return; }
+      alert('✅ تأیید شد!');
+      loadAds(); loadHomeAds(); loadAdminAds();
+    });
+}
+
+function deleteAd(id){
+  if(!confirm('حذف این تبلیغ؟')) return;
+  db.from('ads').delete().eq('id', id).then(function(res){
+    if(res.error){ alert('❌ خطا'); return; }
+    alert('✅ حذف شد!');
+    loadAds(); loadHomeAds(); loadAdminAds();
+  });
+}
+
+function loadAdminNews(){
+  var c = $('adminNewsList');
+  c.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  db.from('news').select('*').order('id', { ascending: false })
+    .then(function(res){
+      if(res.error){ c.innerHTML = '<div style="color:#e94560;">❌ ' + res.error.message + '</div>'; return; }
+      if(!res.data || res.data.length === 0){ c.innerHTML = '<p style="text-align:center;color:#888;">هنوز خبری نیست.</p>'; return; }
+      var html = '', i;
+      for(i=0; i<res.data.length; i++){
+        html += '<div class="admin-news-row"><div class="admin-news-content">';
+        if(res.data[i].date) html += '<div class="date">📅 ' + res.data[i].date + '</div>';
+        html += res.data[i].text + '</div>';
+        html += '<button class="delete-btn" onclick="deleteNews(' + res.data[i].id + ')">🗑</button></div>';
+      }
+      c.innerHTML = html;
+    });
+}
+
+function loadAdminAds(){
+  var c = $('adminAdsList');
+  c.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  db.from('ads').select('*').order('id', { ascending: false })
+    .then(function(res){
+      if(res.error){ c.innerHTML = '<div style="color:#e94560;">❌ ' + res.error.message + '</div>'; return; }
+      if(!res.data || res.data.length === 0){ c.innerHTML = '<p style="text-align:center;color:#888;">هنوز تبلیغی نیست.</p>'; return; }
+      var html = '', i;
+      for(i=0; i<res.data.length; i++){
+        var sc = res.data[i].status === 'active' ? '#4ecca3' : (res.data[i].status === 'pending' ? '#f4a261' : '#e94560');
+        var st = res.data[i].status === 'active' ? '✅ فعال' : (res.data[i].status === 'pending' ? '⏳ در انتظار' : '❌ غیرفعال');
+        html += '<div class="admin-news-row"><div class="admin-news-content">';
+        html += '<div class="date" style="color:' + sc + ';">' + st + ' | ' + res.data[i].days + ' روز | ' + res.data[i].price.toLocaleString('fa-IR') + ' تومان</div>';
+        html += res.data[i].text.substring(0, 70) + '</div>';
+        if(res.data[i].status === 'pending'){
+          html += '<button class="delete-btn" style="background:#4ecca3;" onclick="approveAd(' + res.data[i].id + ',' + res.data[i].days + ')">✅</button>';
+        }
+        html += '<button class="delete-btn" onclick="deleteAd(' + res.data[i].id + ')">🗑</button></div>';
+      }
+      c.innerHTML = html;
+    });
+}
+
+loadNews();
+loadAds();
+loadHomeAds();
+</script>
+
 </body>
-</html>
+  </html>
